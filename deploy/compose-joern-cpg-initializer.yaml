@@ -1,0 +1,13 @@
+name: "vul-detection-joern-cpg-init"
+services:
+  joern-server:
+    build:
+      context: .
+      dockerfile: Dockerfile-Joern-Cpg-Init
+    volumes:
+      - ${PROJECT_TARGET_JOERN_ABS_DIR}:/playground
+      - ${PROJECT_METADATA_ABS_DIR}:/app/input
+    environment:
+      - REPOSITORY_METADATA_ABSOLUTE_PATH=/app/input/${PROJECT_METADATA_CSV_REPOSITORIES_CLONED_FILE}
+      - JOERN_CODEBASES_ABSOLUTE_BASE_PATH=/playground/${PROJECT_TARGET_JOERN_CODEBASES_DIR}
+      - JOERN_CPG_ABSOLUTE_BASE_PATH=/playground/${PROJECT_TARGET_JOERN_CPG_DIR}

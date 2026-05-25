@@ -1,0 +1,7 @@
+FROM biggujo/vul-detection-joern-cpg-generator:1.0.0 AS base
+
+FROM biggujo/vul-detection-joern:4.0.516
+
+COPY --from=base /app/tool /app/cpg_generator
+
+ENTRYPOINT ["/app/cpg_generator"]

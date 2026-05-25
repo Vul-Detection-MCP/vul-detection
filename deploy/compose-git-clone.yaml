@@ -1,0 +1,10 @@
+name: "vul-detection-git-clone"
+services:
+  cloner:
+    image: biggujo/vul-detection-repository-cloner:1.0.1
+    volumes:
+      - ${PROJECT_METADATA_ABS_DIR}:/app/input/
+      - ${PROJECT_TARGET_JOERN_ABS_DIR}${PROJECT_TARGET_JOERN_CODEBASES_DIR}:/app/output/
+    environment:
+      - CSV_ABS_FILE=/app/input/${PROJECT_METADATA_CSV_REPOSITORIES_ALL_FILE}
+      - OUTPUT_ABS_DIR=/app/output/
