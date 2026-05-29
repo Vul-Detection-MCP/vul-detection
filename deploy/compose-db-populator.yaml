@@ -1,7 +1,7 @@
 name: "vul-detection-db-populator"
 services:
   populator:
-    image: biggujo/vul-detection-codebadger-db-populator:1.0.2
+    image: biggujo/vul-detection-codebadger-db-populator:1.0.3
     volumes:
       - ${PROJECT_METADATA_ABS_DIR}:/app/input/
       - ${PROJECT_TARGET_CODEBADGER_ABS_DIR}:/app/output/

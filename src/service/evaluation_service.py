@@ -1,7 +1,16 @@
 from typing import List
 
+from thefuzz import fuzz
+
 from entity.evaluation_result import EvaluationResult
 from entity.result import Result
+
+
+def convert_response_to_int(content: str) -> int:
+    ratio = fuzz.ratio(content.lower(), "yes")
+    if ratio < 20:
+        return 0
+    return 1
 
 
 def precision(true_positives: int, false_positives: int) -> float:
@@ -20,3 +29,6 @@ def get_results(responses: List[Result]) -> EvaluationResult:
     return EvaluationResult(
         precision(true_positive, false_positive), recall(true_positive, true_negative)
     )
+
+if __name__ == '__main__':
+    print("")

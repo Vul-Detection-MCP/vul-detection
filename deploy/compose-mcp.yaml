@@ -9,10 +9,12 @@ services:
       - ${PROJECT_TARGET_JOERN_ABS_DIR}:/playground/
     restart: unless-stopped
   codebadger-mcp:
-    image: biggujo/vul-detection-codebadger:007a1f302224b974d80ece629310efd3604a7f29
+    image: biggujo/vul-detection-codebadger:9c01020d89dd4c0f86516044b60c10cd00ce7b0e
     ports:
       - "${CONTAINER_MCP_SERVER_PORT}:4242"
     volumes:
+      # Codebadger lookups Joern codebases
+      - ${PROJECT_TARGET_JOERN_ABS_DIR}:/app/playground
       # DB persistence
       - ${PROJECT_TARGET_CODEBADGER_ABS_DIR}:/app/input/
       # Application relies on Docker
@@ -25,3 +27,6 @@ services:
       DB_ABS_FILE: "/app/input/codebadger.db"
       JOERN_PORT_MIN: ${CONTAINER_MCP_JOERN_MIN_PORT}
       JOERN_PORT_MAX: ${CONTAINER_MCP_JOERN_MAX_PORT}
+      QUERY_TIMEOUT: ${CONTAINER_MCP_JOERN_QUERY_TIMEOUT_SECONDS}
+      JOERN_JAVA_OPTS: ${CONTAINER_JOERN_JAVA_OPTS}
+      JOERN_MEMORY_LIMIT: ${CONTAINER_MCP_JOERN_MEMORY_LIMIT}
