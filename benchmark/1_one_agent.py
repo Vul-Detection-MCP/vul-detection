@@ -12,6 +12,7 @@ from src.service.evaluation_service import convert_response_to_int
 from src.service.llm_service import create_ollama, create_tools
 from src.service.primevul_paired_service import find_all_exists
 from src.utils import create_file, create_tqdm, get_current_timestamp_formatted
+from utils import create_folder
 
 MODEL = "qwen3.6:27b-q8_0"
 
@@ -40,11 +41,16 @@ async def prompt(agent, v: VulnerabilityRecordTestPaired) -> dict[str, Any] | An
         }
     )
 
+def get_message_logs_abs_file(base: Path, prefix: str) -> Path:
+    return base / f"{prefix}_{get_current_timestamp_formatted()}.csv"
+
 
 async def main():
     file_timestamp = get_current_timestamp_formatted()
     target = (Path(CONFIG.PROJECT_TARGET_BENCHMARK_ABS_DIR.value)
               / f"{Path(__file__).stem}_{file_timestamp}.csv")
+    logs_folder = (Path(CONFIG.PROJECT_TARGET_BENCHMARK_ABS_DIR.value)
+            / f"{Path(__file__).stem}_{file_timestamp}")
 
     base_chat_model = create_ollama(MODEL)
     agent = create_agent(
@@ -52,11 +58,12 @@ async def main():
         tools=await create_tools()
     )
 
-    records = find_all_exists()
+    records = find_all_exists()[100:200]
     print(f"Total: {len(records)}")
     pbar = create_tqdm(len(records))
 
     create_file(target)
+    create_folder(logs_folder)
     with open(target, "a") as f:
         f.write(",".join(["project_url", "commit_id", "codebase_hash", "target", "actual", "elapsed_s"]))
         f.write("\n")
@@ -68,6 +75,14 @@ async def main():
             actual = convert_response_to_int(answer["messages"][-1].content)
             for message in answer["messages"]:
                 print(message.content)
+            message_logs_abs_file = get_message_logs_abs_file(logs_folder, record.extract_preferred_repository_name())
+            with open(message_logs_abs_file, "w") as f:
+                for message in answer["messages"]:
+                    content: str | list[str] = message.content
+                    if isinstance(content, list):
+                        content = "\n".join(map(str, content))
+                    f.write(content)
+                    f.write("\n")
         except Exception as err:
             print(err)
             actual = "EXCEPTION"

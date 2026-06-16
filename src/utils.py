@@ -31,12 +31,18 @@ def get_current_timestamp_formatted():
 
 
 def create_folder(path: Path):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    print(path)
+    path.mkdir(parents=True, exist_ok=True)
 
 
 def create_file(path: Path):
-    create_folder(path)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, "w").close()
+
+
+def compose_up_tee(target: Path, logs_file: Path):
+    os.system(
+        f"docker compose --file {str(target)} up --build --remove-orphans --force-recreate | tee {str(logs_file)}")
 
 
 def compose_up(target: Path):

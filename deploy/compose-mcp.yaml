@@ -9,7 +9,7 @@ services:
       - ${PROJECT_TARGET_JOERN_ABS_DIR}:/playground/
     restart: unless-stopped
   codebadger-mcp:
-    image: biggujo/vul-detection-codebadger:9c01020d89dd4c0f86516044b60c10cd00ce7b0e
+    image: biggujo/vul-detection-codebadger:b976cde8f17f5fc3c39b31fa4b66b16eaf38f9f8
     ports:
       - "${CONTAINER_MCP_SERVER_PORT}:4242"
     volumes:

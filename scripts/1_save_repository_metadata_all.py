@@ -11,7 +11,7 @@ def main():
               / CONFIG.PROJECT_METADATA_CSV_REPOSITORIES_ALL_FILE.value)
     create_file(target)
 
-    all_records = primevul_paired_service.find_all()[:10]
+    all_records = primevul_paired_service.find_all()
     seen = set()
     repositories = [
         (r.project_url, r.commit_id, r.extract_preferred_repository_name(), r.language)

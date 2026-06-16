@@ -1,3 +1,4 @@
+import importlib
 import os
 from io import StringIO
 from pathlib import Path
@@ -39,7 +40,7 @@ CONTAINER_MCP_JOERN_MEMORY_LIMIT=54g
 CONTAINER_MCP_JOERN_MIN_PORT=13371
 CONTAINER_MCP_JOERN_MAX_PORT=13399
 
-OTHER_LLM_BASE_URL=localhost:11435
+OTHER_LLM_BASE_URL=localhost:11434
 OTHER_CLONE_DEPTH=1
 """
 
@@ -99,6 +100,9 @@ def write(path: Path, content: str):
     with open(path, "w") as f:
         f.write(content)
 
+def create_if_not_exists(path: Path):
+    if not path.exists():
+        path.touch()
 
 def main():
     dotenv_abs_dir = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -110,6 +114,9 @@ def main():
                    / "config.py")
     config_content = get_config_content(dotenv_content, CONFIG_FORMAT)
     write(config_path, config_content)
+
+    generated_config = importlib.import_module('config')
+    create_if_not_exists(Path(generated_config.CONFIG.PROJECT_ENV_ADDITIONAL_ABS_FILE.value))
 
 
 if __name__ == '__main__':

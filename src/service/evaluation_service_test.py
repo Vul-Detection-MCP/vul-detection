@@ -14,8 +14,8 @@ def test_precision():
 
 def test_recall():
     true_positives = 2
-    true_negatives = 8
+    false_negatives = 8
 
-    actual = evaluation_service.precision(true_positives, true_negatives)
+    actual = evaluation_service.recall(true_positives, false_negatives)
 
     assert math.isclose(actual, 0.2)
